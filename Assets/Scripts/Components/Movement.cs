@@ -31,7 +31,18 @@ public class Movement : MonoBehaviour
 
         float distance = m_currentSpeed * Time.deltaTime;
 
-        if (m_solidObject != null && m_solidObject.IsInContactWithObject(direction, out RaycastHit hit)) return;
+        if (m_solidObject != null)
+        {
+            Vector3 dir = Vector3.zero;
+            dir.x = direction.x;
+
+            if (m_solidObject.IsInContactWithObject(dir, out RaycastHit hit)) return;
+
+            dir.x = 0f;
+            dir.z = direction.z;
+
+            if (m_solidObject.IsInContactWithObject(dir, out hit)) return;
+        }
 
         Vector3 movement = direction * distance;
         transform.position += movement;
