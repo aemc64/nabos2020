@@ -27,24 +27,14 @@ public class Movement : MonoBehaviour
 
     public void Move(Vector3 direction)
     {
-        if (!m_initialized) return;
+        if (!m_initialized || direction.Equals(Vector3.zero)) return;
 
         float distance = m_currentSpeed * Time.deltaTime;
-
-        if (m_solidObject != null)
-        {
-            Vector3 dir = Vector3.zero;
-            dir.x = direction.x;
-
-            if (m_solidObject.IsInContactWithObject(dir, out RaycastHit hit)) return;
-
-            dir.x = 0f;
-            dir.z = direction.z;
-
-            if (m_solidObject.IsInContactWithObject(dir, out hit)) return;
-        }
-
         Vector3 movement = direction * distance;
-        transform.position += movement;
+        Vector3 newPosition = transform.position + movement;
+
+        if (m_solidObject != null && m_solidObject.IsInContactWithObject(newPosition, direction)) return;
+
+        transform.position = newPosition;
     }
 }
